@@ -1,6 +1,33 @@
+# dacustoms — pip constraints gate.
+#
+# Two jobs, kept in explicit sections:
+#
+#   1. FREEZE MIRROR — pins copied verbatim from the system package's
+#      requirements.txt (daharness/requirements.txt). This section installs
+#      nothing; it FAILS any `pip install -c ...` loudly the day the deb
+#      freeze bumps one of these out from under us, instead of silently
+#      forking the version. The Brain / gateway / kernel all import
+#      dacustoms.* IN-PROCESS under the framework's own interpreter — a
+#      forked pin here would break the host lane, not just this folder.
+#
+#   2. TRANSITIVE CEILINGS — upper bounds on packages pulled in transitively
+#      (not carried by the freeze, which deliberately leaves them open).
+#      Keep this section rare — a pinned transitive can conflict with future
+#      apt packages on upgrade day.
+#
+# Mirror additions/removals from daharness/requirements.txt BY HAND and one
+# commit at a time — the diff of this file against the freeze is the record.
+#
+# Pre-flight drift check (the "what's satisfied vs not" diff — should
+# always resolve clean):
+#   pip install --dry-run -r requirements.txt -c constraints.txt
+# Then install for real into the venv + import smoke test.
+
+# --- 1. freeze mirror (verbatim from daharness/requirements.txt) ---
 aiohttp==3.14.3
 psutil==7.2.2
 ujson==6.0.0
-aio-pika==9.4.1
 grpcio==1.78.0
+
+# --- 2. transitive ceilings ---
 typing-extensions==4.15.0

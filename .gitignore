@@ -3,4 +3,8 @@ lib64
 __pycache__/
 bin/
 lib/
+# pip-extras target folder (installed via --target; loaded by the
+# dacustoms_pylibs.pth file in the system dist-packages dir — appended,
+# so it can only fill gaps, never shadow a system pin).
+pylibs/
 pyvenv.cfg
